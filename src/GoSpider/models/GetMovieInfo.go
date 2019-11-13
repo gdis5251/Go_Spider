@@ -286,6 +286,7 @@ func GetHtmlUrls(movieHtml string) []string {
 	return urls
 }
 
+// 获得当前队列的长度
 func GetQueueLength() int {
 	length, err := client.Llen(URL_QUEUE)
 	if err != nil {
