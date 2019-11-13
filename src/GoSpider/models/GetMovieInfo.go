@@ -248,3 +248,25 @@ func GetMovieGrade(movieHtml string) string {
 
 	return result[0][1]
 }
+
+func GetHtmlUrls(movieHtml string) []string {
+	if movieHtml == "" {
+		return make([]string, 0)
+	}
+
+	// 使用正则表达式匹配网页 url
+	// <a href="https://movie.douban.com/subject/33400376/?from=subject-page" class="">平原上的夏洛克</a>
+	reg := regexp.MustCompile(`<a href="(https://movie.douban.com/.*?)"`)
+	result := reg.FindAllStringSubmatch(movieHtml, -1)
+
+	if len(result) == 0 {
+		return make([]string, 0)
+	}
+
+	var urls []string
+	for _, value := range result {
+		urls = append(urls, value[1])
+	}
+
+	return urls
+}

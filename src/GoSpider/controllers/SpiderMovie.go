@@ -10,7 +10,6 @@ import (
 	"GoSpider/models"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/httplib"
-	"strconv"
 )
 
 type MovieController struct {
@@ -51,9 +50,18 @@ func (this *MovieController) Spider() {
 	movieInfo.MovieGrade = models.GetMovieGrade(movieHtml)
 
 	// 将抓取的电影信息插入到数据库中
-	id, insertErr := models.AddMovieInfo(&movieInfo)
-	if insertErr != nil {
-		panic(insertErr)
+	//id, insertErr := models.AddMovieInfo(&movieInfo)
+	//if insertErr != nil {
+	//	panic(insertErr)
+	//}
+	//this.Ctx.WriteString(strconv.Itoa(int(id)))
+
+	// 将所有筛选出来的 url 放入到 redis 中
+	models.ConnectRedis("127.0.0.1:6379")
+	urls := models.GetHtmlUrls(movieHtml)
+	for _, value := range urls {
+		models.PushQueue(value)
 	}
-	this.Ctx.WriteString(strconv.Itoa(int(id)))
+
+	this.Ctx.WriteString("OK!")
 }
