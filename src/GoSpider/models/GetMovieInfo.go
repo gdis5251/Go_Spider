@@ -41,8 +41,6 @@ func init() {
 }
 
 func AddMovieInfo(movieInfo *MovieInfo) (int64, error) {
-	// TODO
-	// 可以走到这里，感觉是insert的问题
 	id, insertErr := db.Insert(movieInfo)
 	if insertErr != nil {
 		fmt.Println(insertErr)
