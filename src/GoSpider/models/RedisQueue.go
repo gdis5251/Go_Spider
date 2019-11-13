@@ -39,7 +39,7 @@ func PopQueue() string {
 }
 
 // 使用 Sadd 方法，实现将 url 插入到集合中
-func AddInSet(url string) {
+func AddToSet(url string) {
 	_, addErr := client.Sadd(URL_SET, []byte(url))
 	if addErr != nil {
 		panic(addErr)

@@ -59,6 +59,10 @@ func GetMovieDirector(movieHtml string) string {
 	reg := regexp.MustCompile(`<a .*? rel="v:directedBy">(.*?)</a>`)
 	result := reg.FindAllStringSubmatch(movieHtml, -1)
 
+	if len(result) == 0 {
+		return ""
+	}
+
 	return result[0][1]
 }
 
@@ -69,8 +73,12 @@ func GetMovieName(movieHtml string) string {
 
 	// 使用正则表达式匹配电影名
 	// <span property="v:itemreviewed">他们已不再变老 They Shall Not Grow Old</span>
-	reg := regexp.MustCompile(`<span.*?property="v:itemreviewed">(.*?)</span>`)
+	reg := regexp.MustCompile(`<span property="v:itemreviewed">(.*?)</span>`)
 	result := reg.FindAllStringSubmatch(movieHtml, -1)
+
+	if len(result) == 0 {
+		return ""
+	}
 
 	return result[0][1]
 }
@@ -84,6 +92,10 @@ func GetMovieType(movieHtml string) string {
 	// <span property="v:genre">纪录片</span>
 	reg := regexp.MustCompile(`<span.*?property="v:genre">(.*?)</span>`)
 	result := reg.FindAllStringSubmatch(movieHtml, -1)
+
+	if len(result) == 0 {
+		return ""
+	}
 
 	// 因为电影种类可能会有多种，使用循环把所有种类拼接在一起
 	var movieType string
@@ -110,7 +122,7 @@ func GetMovieCountry(movieHtml string) string {
 	result := reg.FindAllStringSubmatch(movieHtml, -1)
 
 	if len(result) == 0 {
-		return "Can't Match Any Country Or Regexp Error!!!!"
+		return ""
 	}
 
 	return result[0][1]
@@ -125,6 +137,10 @@ func GetMovieMainCharacter(movieHtml string) string {
 	// <a href="/celebrity/1324043/" rel="v:starring">大鹏</a>
 	reg := regexp.MustCompile(`<a .*? rel="v:starring">(.*?)</a>`)
 	result := reg.FindAllStringSubmatch(movieHtml, -1)
+
+	if len(result) == 0 {
+		return ""
+	}
 
 	// 因为电影种类可能会有多种，使用循环把所有种类拼接在一起
 	var movieMainCharacter string
@@ -149,9 +165,8 @@ func GetMovieWriter(movieHtml string) string {
 	result := reg.FindAllStringSubmatch(movieHtml, -1)
 
 	if len(result) == 0 {
-		return "Can't Match Any Writer Or Regexp Error!!!!"
+		return ""
 	}
-
 	var movieWriter string
 	for index, value := range result {
 		movieWriter += value[1]
@@ -176,7 +191,7 @@ func GetMovieLanguage(movieHtml string) string {
 	result := reg.FindAllStringSubmatch(movieHtml, -1)
 
 	if len(result) == 0 {
-		return "Can't Match Any Language Or Regexp Error!!!!"
+		return ""
 	}
 
 	var movieLanguage string
@@ -201,7 +216,7 @@ func GetMovieOnTime(movieHtml string) string {
 	result := reg.FindAllStringSubmatch(movieHtml, -1)
 
 	if len(result) == 0 {
-		return "Can't Match Any Language Or Regexp Error!!!!"
+		return ""
 	}
 
 	var movieOnTime string
@@ -226,7 +241,7 @@ func GetMovieSpan(movieHtml string) string {
 	result := reg.FindAllStringSubmatch(movieHtml, -1)
 
 	if len(result) == 0 {
-		return "Can't Match Any Span Or Regexp Error!!!!"
+		return ""
 	}
 
 	return result[0][1]
@@ -243,7 +258,7 @@ func GetMovieGrade(movieHtml string) string {
 	result := reg.FindAllStringSubmatch(movieHtml, -1)
 
 	if len(result) == 0 {
-		return "Can't Match Any Grade Or Regexp Error!!!!"
+		return ""
 	}
 
 	return result[0][1]
@@ -269,4 +284,13 @@ func GetHtmlUrls(movieHtml string) []string {
 	}
 
 	return urls
+}
+
+func GetQueueLength() int {
+	length, err := client.Llen(URL_QUEUE)
+	if err != nil {
+		panic(err)
+	}
+
+	return length
 }
